@@ -113,7 +113,17 @@ class Brain:
         self.want("sym", ";")
         return Say(val)
 
+    
+
     def expr(self):
+        l = self.atom()
+        while self.look() and self.look()[0] == "math":
+            op = self.move()
+            r = self.atom()
+            l = (op, l, r)
+        return l
+    
+    def atom(self):
         t = self.move()
         if t[0] == "num":
             return Num(t[1])
@@ -122,5 +132,23 @@ class Brain:
         if t[0] == "name":
             return Name(t[1])
         raise SyntaxError(f"no clue what to do with {t}")
-
-
+    
+    def evalexp(self, exp, mem):
+        if isinstance(exp, Num):
+            return exp.val
+        if isinstance(exp, Txt):
+            return exp.val
+        if isinstance(exp, Name):
+            if exp.val in mem:
+                return mem[exp.val]
+            raise NameError(f"{exp.val} is not set")
+        if isinstance(exp, tuple):
+            op, left, right = exp
+            l = self.evalexp(left, mem)
+            r = self.evalexp(right, mem)
+            if op == "+": return l + r
+            if op == "-": return l - r
+            if op == "*": return l * r
+            if op == "/": return l / r
+            raise SyntaxError(f"bad op {op}")
+    raise TypeError("can't eval this thing")
