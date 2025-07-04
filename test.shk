@@ -1,6 +1,2 @@
-grab x as 10;
-grab y as x + 5;
-say x
-chill 2
-say y;
-say "Hello from Shrik!";
+grab name as "Anirudh"
+say name

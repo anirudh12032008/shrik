@@ -1,18 +1,21 @@
 import re
-
+import sys
 from numpy import exp
 
 rules = [
     ("blah",    r'//.*?$'),
     ("num",     r'\d+(\.\d+)?'),
     ("txt",     r'"[^"]*"'),
-    ("word",    r'\b(grab|as|say|craft|return|oops|if|else|input)\b'),
+    ("word",    r'\b(grab|as|say|craft|return|oops|if|else|repeat|input)\b'),
     ("name",    r'[a-zA-Z_][a-zA-Z0-9_]*'),
     ("math",    r'==|!=|<=|>=|[+\-*/%=<>]'),
     ("sym",     r'[;(){}]'),
     ("skip",    r'\s+'),
     ("weird",   r'.'),
 ]
+
+funcs = {}
+
 
 def cut(code):
     out = []
@@ -44,6 +47,12 @@ class Set(Thing):
     def __init__(self, who, val):
         self.who = who
         self.val = val
+
+class Repeat(Thing):
+    def __init__(self, cond, body):
+        self.cond = cond
+        self.body = body
+
 
 class Say(Thing):
     def __init__(self, val):
@@ -101,6 +110,19 @@ class Brain:
         self.spot += 1
         return t
 
+    def loopy(self):
+        self.want("word", "repeat")
+        self.want("sym", "(")
+        cond = self.expr()
+        self.want("sym", ")")
+        self.want("sym", "{")
+        body = []
+        while self.look() and self.look()[1] != "}":
+            body.append(self.do())
+        self.want("sym", "}")
+        return Repeat(cond, body)
+
+
     def want(self, kind, val=None):
         t = self.look()
         if not t or t[0] != kind:
@@ -115,7 +137,43 @@ class Brain:
             it = self.do()
             if it:
                 all.append(it)
-        return all
+        return all\
+        
+    def craft(self):
+        self.want("word", "craft")
+        name = self.want("name")[1]
+        self.want("sym", "(")
+        args = []
+        while self.look() and self.look()[1] != "sym":
+            t = self.want("name")[1]
+            args.append(t)
+            if self.look()[1] == ")":
+                break
+            self.want("sym", ",")
+
+        self.want("sym", ")")
+        self.want("sym", "{")
+        body = []
+        while self.look() and self.look()[1] != "}":
+            body.append(self.do())
+        self.want("sym", "}")
+        return Func(name, args, body)
+    
+    def callit(self):
+        name = self.want("name")[1]
+        print(f"calling {name}")
+        if self.look() and self.look()[1] == "(":
+            self.want("sym", "(")
+            args = []
+            while self.look() and self.look()[1] != ")":
+                t = self.expr()
+                args.append(t)
+                if self.look()[1] == ")":
+                    break
+                self.want("sym", ",")
+            self.want("sym", ")")
+            return Call(name, args)
+        raise SyntaxError(f"nope, idk what is {name} ")
 
     def do(self):
         t = self.look()
@@ -128,9 +186,11 @@ class Brain:
         if t[0] == "word" and t[1] == "oops":
             return self.fail()
         if t[0] == "word" and t[1] == "craft":
-            return self.build()
+            return self.craft()
+        if t[0] == "word" and t[1] == "repeat":
+            return self.loopy() 
         if t[0] == "name":
-            return self.callish()
+            return self.callit()
 
         raise SyntaxError(f"huh what is {t}")
     
@@ -158,22 +218,17 @@ class Brain:
 
         return If(cond, yes, no)
 
-        
     def make(self):
         self.want("word", "grab")
         who = self.want("name")
         self.want("word", "as")
         val = self.expr()
-        self.want("sym", ";")
         return Set(who[1], val)
 
     def talk(self):
         self.want("word", "say")
         val = self.expr()
-        self.want("sym", ";")
         return Say(val)
-
-    
 
     def expr(self):
         l = self.atom()
@@ -225,19 +280,15 @@ class Brain:
             raise SyntaxError(f"bad op {op}")
         raise TypeError(f"can't eval this thing")
 
-    
-
 
 if __name__ == "__main__":
-    code = '''
-    grab score as 92;
+    if len(sys.argv) != 2:
+        print("Usage: python interpreter.py filename.shk")
+        sys.exit(1)
 
-    say "What's your name?";
-grab name as input;
-say "Hello " + name;
-
-
-    '''
+    f = sys.argv[1]
+    with open(f, 'r') as f:
+        code = f.read()
 
     tokens = cut(code)
     brain = Brain(tokens)
@@ -249,6 +300,35 @@ say "Hello " + name;
         if isinstance(line, Say):
             val = brain.evalexp(line.val, mem)
             print(val)
+        elif isinstance(line, Func):
+            funcs[line.name] = line
+        elif isinstance(line, Repeat):
+            while brain.evalexp(line.cond, mem):
+                for stmt in line.body:
+                    if isinstance(stmt, Say):
+                        print(brain.evalexp(stmt.val, mem))
+                    elif isinstance(stmt, Set):
+                        mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                    elif isinstance(stmt, Oops):
+                        val = brain.evalexp(stmt.msg, mem)
+                        raise RuntimeError(f"oops! {val}")
+
+        elif isinstance(line, Call):
+            f = funcs.get(line.name)
+            if not f:
+                raise NameError(f"no craft called {line.name}")
+            new_mem = mem.copy()
+            for i, argname in enumerate(f.args):
+                new_mem[argname] = brain.evalexp(line.args[i], mem)
+            for stmt in f.body:
+                if isinstance(stmt, Say):
+                    print(brain.evalexp(stmt.val, new_mem))
+                elif isinstance(stmt, Set):
+                    new_mem[stmt.who] = brain.evalexp(stmt.val, new_mem)
+                elif isinstance(stmt, Oops):
+                    val = brain.evalexp(stmt.msg, new_mem)
+                    raise RuntimeError(f"oops! {val}")
+
         elif isinstance(line, Set):
             mem[line.who] = brain.evalexp(line.val, mem)
         elif isinstance(line, Oops):
