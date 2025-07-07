@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShrikLang Docs</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-gray-900 to-teal-800 text-white min-h-screen font-sans">
+  <div class="max-w-5xl mx-auto py-12 px-6">
+    <h1 class="text-5xl font-bold text-center mb-10 drop-shadow-lg">ShrikLang Docs</h1>
+
+    <div class="flex justify-center mb-8">
+      <button onclick="showTab('intro')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Intro</button>
+      <button onclick="showTab('syntax')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Syntax</button>
+      <button onclick="showTab('usage')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Usage</button>
+    </div>
+
+    <div id="intro" class="tc">
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-2">What is ShrikLang?</h2>
+        <p class="text-lg leading-relaxed">ShrikLang is a cool programming language designed by ANIRUDH SAHU its built with Python, it has variables, functions, loops, errors and moreee!!</p>
+      </div>
+    </div>
+
+    <div id="syntax" class="tc hidden space-y-8">
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Declare a Variable</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+grab x as 5
+say x
+        </pre>
+      </div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+  <h2 class="text-2xl font-semibold mb-4">User Input</h2>
+  <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+grab name as input
+say "Hello " + name
+  </pre>
+</div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Print Output</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+say "Hello, World!"
+        </pre>
+      </div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Conditional Logic</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+grab x as 10
+if x > 5 {
+  say "x is big!"
+} else {
+  say "x is small!"
+}
+        </pre>
+      </div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Function Definition</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+craft greet(name) {
+  say "Hello " + name
+}
+
+greet("Shrik")
+
+        </pre>
+      </div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Loops</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+grab i as 0
+repeat(i < 5) {
+  say i
+  grab i as i + 1
+}
+        </pre>
+      </div>
+
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">Raise an Error</h2>
+        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
+oops "Something went wrong!"
+        </pre>
+      </div>
+    </div>
+
+    <div id="usage" class="tc hidden">
+      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
+        <h2 class="text-2xl font-semibold mb-2">How to Run</h2>
+        <p class="text-lg leading-relaxed">
+          Save your code in a <code class="bg-white/20 px-2 py-1 rounded">.shk</code> file and run it using:
+        </p>
+        <pre class="bg-black/60 p-4 rounded mt-4 font-mono text-green-300">
+python interpreter.py myfile.shk
+        </pre>
+      </div>
+    </div>
+
+    <div class="text-center mt-10">
+      <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-full text-lg shadow-lg">
+        <a href="https://github.com/anirudh12032008/shrik">Get Started</a>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('.tc').forEach(el => el.classList.add('hidden'));
+      document.getElementById(tab).classList.remove('hidden');
+    }
+    showTab('intro');
+  </script>
+</body>
+</html>

@@ -16,7 +16,6 @@ rules = [
 
 funcs = {}
 
-
 def cut(code):
     out = []
     pat = '|'.join(f'(?P<{n}>{p})' for n, p in rules)
@@ -122,7 +121,6 @@ class Brain:
         self.want("sym", "}")
         return Repeat(cond, body)
 
-
     def want(self, kind, val=None):
         t = self.look()
         if not t or t[0] != kind:
@@ -144,7 +142,7 @@ class Brain:
         name = self.want("name")[1]
         self.want("sym", "(")
         args = []
-        while self.look() and self.look()[1] != "sym":
+        while self.look() and not (self.look()[0] == "sym" and self.look()[1] == ")"):
             t = self.want("name")[1]
             args.append(t)
             if self.look()[1] == ")":
@@ -197,6 +195,8 @@ class Brain:
     def fail(self):
         self.want("word", "oops")
         msg = self.expr()
+        return Oops(msg)
+
 
     def iffy(self):
         self.want("word", "if")
@@ -296,61 +296,66 @@ if __name__ == "__main__":
 
     mem = {}
 
-    for line in plan:
-        if isinstance(line, Say):
-            val = brain.evalexp(line.val, mem)
-            print(val)
-        elif isinstance(line, Func):
-            funcs[line.name] = line
-        elif isinstance(line, Repeat):
-            while brain.evalexp(line.cond, mem):
-                for stmt in line.body:
+    try:
+        for line in plan:
+            if isinstance(line, Say):
+                val = brain.evalexp(line.val, mem)
+                print(val)
+            elif isinstance(line, Func):
+                funcs[line.name] = line
+            elif isinstance(line, Repeat):
+                while brain.evalexp(line.cond, mem):
+                    for stmt in line.body:
+                        if isinstance(stmt, Say):
+                            print(brain.evalexp(stmt.val, mem))
+                        elif isinstance(stmt, Set):
+                            mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        elif isinstance(stmt, Oops):
+                            val = brain.evalexp(stmt.msg, mem)
+                            raise RuntimeError(f"oops! {val}")
+
+            elif isinstance(line, Call):
+                f = funcs.get(line.name)
+                if not f:
+                    raise NameError(f"no craft called {line.name}")
+                new_mem = mem.copy()
+                for i, argname in enumerate(f.args):
+                    new_mem[argname] = brain.evalexp(line.args[i], mem)
+                for stmt in f.body:
                     if isinstance(stmt, Say):
-                        print(brain.evalexp(stmt.val, mem))
+                        print(brain.evalexp(stmt.val, new_mem))
                     elif isinstance(stmt, Set):
-                        mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        new_mem[stmt.who] = brain.evalexp(stmt.val, new_mem)
                     elif isinstance(stmt, Oops):
-                        val = brain.evalexp(stmt.msg, mem)
+                        val = brain.evalexp(stmt.msg, new_mem)
                         raise RuntimeError(f"oops! {val}")
 
-        elif isinstance(line, Call):
-            f = funcs.get(line.name)
-            if not f:
-                raise NameError(f"no craft called {line.name}")
-            new_mem = mem.copy()
-            for i, argname in enumerate(f.args):
-                new_mem[argname] = brain.evalexp(line.args[i], mem)
-            for stmt in f.body:
-                if isinstance(stmt, Say):
-                    print(brain.evalexp(stmt.val, new_mem))
-                elif isinstance(stmt, Set):
-                    new_mem[stmt.who] = brain.evalexp(stmt.val, new_mem)
-                elif isinstance(stmt, Oops):
-                    val = brain.evalexp(stmt.msg, new_mem)
-                    raise RuntimeError(f"oops! {val}")
-
-        elif isinstance(line, Set):
-            mem[line.who] = brain.evalexp(line.val, mem)
-        elif isinstance(line, Oops):
-            val = brain.evalexp(line.msg, mem)
-            raise RuntimeError(f"oops! {val}")
-        elif isinstance(line, If):
-            cond = brain.evalexp(line.cond, mem)
-            if cond:
-                for stmt in line.body:
-                    if isinstance(stmt, Say):
-                        print(brain.evalexp(stmt.val, mem))
-                    elif isinstance(stmt, Set):
-                        mem[stmt.who] = brain.evalexp(stmt.val, mem)
-                    elif isinstance(stmt, Oops):
-                        val = brain.evalexp(stmt.msg, mem)
-                        raise RuntimeError(f"oops! {val}")
-            elif line.other:
-                for stmt in line.other:
-                    if isinstance(stmt, Say):
-                        print(brain.evalexp(stmt.val, mem))
-                    elif isinstance(stmt, Set):
-                        mem[stmt.who] = brain.evalexp(stmt.val, mem)
-                    elif isinstance(stmt, Oops):
-                        val = brain.evalexp(stmt.msg, mem)
-                        raise RuntimeError(f"oops! {val}")
+            elif isinstance(line, Set):
+                mem[line.who] = brain.evalexp(line.val, mem)
+            elif isinstance(line, Oops):
+                val = brain.evalexp(line.msg, mem)
+                raise RuntimeError(f"oops! {val}")
+            elif isinstance(line, If):
+                cond = brain.evalexp(line.cond, mem)
+                if cond:
+                    for stmt in line.body:
+                        if isinstance(stmt, Say):
+                            print(brain.evalexp(stmt.val, mem))
+                        elif isinstance(stmt, Set):
+                            mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        elif isinstance(stmt, Oops):
+                            val = brain.evalexp(stmt.msg, mem)
+                            raise RuntimeError(f"oops! {val}")
+                elif line.other:
+                    for stmt in line.other:
+                        if isinstance(stmt, Say):
+                            print(brain.evalexp(stmt.val, mem))
+                        elif isinstance(stmt, Set):
+                            mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        elif isinstance(stmt, Oops):
+                            val = brain.evalexp(stmt.msg, mem)
+                            raise RuntimeError(f"oops! {val}")
+            else:
+                raise TypeError(f"unknown line type {type(line)}")
+    except Exception as e:
+        print("An error occurred:", e)
