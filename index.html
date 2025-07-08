@@ -80,9 +80,9 @@
 
 
       <div class="flex justify-center mb-8 space-x-4">
-        <button onclick="showTab('intro')" class="tab-button">Intro</button>
-        <button onclick="showTab('syntax')" class="tab-button">Syntax</button>
-        <button onclick="showTab('usage')" class="tab-button">Usage</button>
+        <button onclick="st('intro')" class="tab-button">Intro</button>
+        <button onclick="st('syntax')" class="tab-button">Syntax</button>
+        <button onclick="st('usage')" class="tab-button">Usage</button>
       </div>
 
       <div id="intro" class="tc fade show">
@@ -172,7 +172,7 @@
       }
       typing();
     }
-      function showTab(tab) {
+      function st(tab) {
         document.querySelectorAll('.tc').forEach(el => {
           el.classList.remove('show');
           el.classList.add('hidden');
@@ -181,7 +181,7 @@
         target.classList.remove('hidden');
         setTimeout(() => target.classList.add('show'), 40);
       }
-      showTab('intro');
+      st('intro');
       typeT("ti", "ShrikLang Docs ", 250);
       typeT("1", "What is ShrikLang? ", 100);
       typeT("2", "ShrikLang is a cool programming language designed by ANIRUDH SAHU, built with Python. It has variables, functions, loops, errors, and NO SEMICOLONS!!!!", 20);
