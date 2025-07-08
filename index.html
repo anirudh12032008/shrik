@@ -1,120 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShrikLang Docs</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gradient-to-br from-indigo-900 via-gray-900 to-teal-800 text-white min-h-screen font-sans">
-  <div class="max-w-5xl mx-auto py-12 px-6">
-    <h1 class="text-5xl font-bold text-center mb-10 drop-shadow-lg">ShrikLang Docs</h1>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShrikLang Docs</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
 
-    <div class="flex justify-center mb-8">
-      <button onclick="showTab('intro')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Intro</button>
-      <button onclick="showTab('syntax')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Syntax</button>
-      <button onclick="showTab('usage')" class="bg-white bg-opacity-10 px-4 py-2 rounded-full mx-2 hover:bg-white/20">Usage</button>
-    </div>
+    <style>
+      body {
+        font-family: 'Orbitron', sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: #fff;
+      }
 
-    <div id="intro" class="tc">
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-2">What is ShrikLang?</h2>
-        <p class="text-lg leading-relaxed">ShrikLang is a cool programming language designed by ANIRUDH SAHU its built with Python, it has variables, functions, loops, errors and moreee!!</p>
-      </div>
-    </div>
+      h1, h2, h3 {
+        font-family: 'Orbitron', sans-serif;
+        text-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+        letter-spacing: 2px;
+      }
 
-    <div id="syntax" class="tc hidden space-y-8">
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Declare a Variable</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-grab x as 5
-say x
-        </pre>
-      </div>
+      .glass {
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      }
 
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-  <h2 class="text-2xl font-semibold mb-4">User Input</h2>
-  <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-grab name as input
-say "Hello " + name
-  </pre>
-</div>
+      .cyber-button {
+        background: linear-gradient(90deg, #ff00cc, #3333ff);
+        color: #fff;
+        border-radius: 50px;
+        padding: 12px 24px;
+        box-shadow: 0 0 10px #ff00cc, 0 0 20px #3333ff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
 
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Print Output</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-say "Hello, World!"
-        </pre>
-      </div>
+      .cyber-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #ff00cc, 0 0 40px #3333ff;
+      }
 
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Conditional Logic</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-grab x as 10
-if x > 5 {
-  say "x is big!"
-} else {
-  say "x is small!"
-}
-        </pre>
-      </div>
+      pre {
+        background-color: rgba(0,0,0,0.7);
+        border: 1px solid rgba(0,255,255,0.2);
+        box-shadow: 0 0 8px rgba(0,255,255,0.4);
+        color: #00ffcc;
+      }
 
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Function Definition</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-craft greet(name) {
-  say "Hello " + name
-}
+      .tab-button {
+        background-color: rgba(255, 255, 255, 0.08);
+        padding: 10px 20px;
+        border-radius: 30px;
+        border: 1px solid rgba(0,255,255,0.2);
+        box-shadow: 0 0 10px rgba(0,255,255,0.2);
+        transition: all 0.3s ease;
+      }
 
-greet("Shrik")
-
-        </pre>
-      </div>
-
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Loops</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-grab i as 0
-repeat(i < 5) {
-  say i
-  grab i as i + 1
-}
-        </pre>
-      </div>
-
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Raise an Error</h2>
-        <pre class="bg-black/60 p-4 rounded font-mono text-green-300">
-oops "Something went wrong!"
-        </pre>
-      </div>
-    </div>
-
-    <div id="usage" class="tc hidden">
-      <div class="bg-white bg-opacity-10 rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-semibold mb-2">How to Run</h2>
-        <p class="text-lg leading-relaxed">
-          Save your code in a <code class="bg-white/20 px-2 py-1 rounded">.shk</code> file and run it using:
-        </p>
-        <pre class="bg-black/60 p-4 rounded mt-4 font-mono text-green-300">
-python interpreter.py myfile.shk
-        </pre>
-      </div>
-    </div>
-
-    <div class="text-center mt-10">
-      <button class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-full text-lg shadow-lg">
-        <a href="https://github.com/anirudh12032008/shrik">Get Started</a>
-      </button>
-    </div>
-  </div>
-
-  <script>
-    function showTab(tab) {
-      document.querySelectorAll('.tc').forEach(el => el.classList.add('hidden'));
-      document.getElementById(tab).classList.remove('hidden');
+      .tab-button:hover {
+        background: linear-gradient(90deg, #ff00cc, #00ffe1);
+        box-shadow: 0 0 15px #ff00cc, 0 0 15px #00ffe1;
+        transform: scale(1.05);
+      }
+      .typed::after {
+      content: '|';
+      animation: blink 0.7s infinite;
     }
-    showTab('intro');
-  </script>
-</body>
-</html>
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    </style>
+
+  </head>
+  <body class="min-h-screen">
+    <div class="max-w-5xl mx-auto py-12 px-6">
+  <h1 id="ti" class="text-5xl font-bold text-center mb-10 gt"></h1>
+
+
+      <div class="flex justify-center mb-8 space-x-4">
+        <button onclick="showTab('intro')" class="tab-button">Intro</button>
+        <button onclick="showTab('syntax')" class="tab-button">Syntax</button>
+        <button onclick="showTab('usage')" class="tab-button">Usage</button>
+      </div>
+
+      <div id="intro" class="tc fade show">
+        <div class="glass rounded-2xl p-6">
+          <h2 id="1" class="text-2xl font-semibold mb-3"></h2>
+          <p id="2" class="text-lg leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div id="syntax" class="tc fade hidden space-y-8">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4"></h2>
+          <pre>grab x as 5
+  say x</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">User Input</h2>
+          <pre>grab name as input
+  say "Hello " + name</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Print Output</h2>
+          <pre>say "Hello, World!"</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Conditional Logic</h2>
+          <pre>grab x as 10
+  if x > 5 {
+    say "x is big!"
+  } else {
+    say "x is small!"
+  }</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Function Definition</h2>
+          <pre>craft greet(name) {
+    say "Hello " + name
+  }
+
+  greet("Shrik")</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Loops</h2>
+          <pre>grab i as 0
+  repeat(i < 5) {
+    say i
+    grab i as i + 1
+  }</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Raise an Error</h2>
+          <pre>oops "Something went wrong!"</pre>
+        </div>
+      </div>
+
+      <div id="usage" class="tc fade hidden">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-3">How to Run</h2>
+          <p class="text-lg leading-relaxed">Save your code in a <code class="bg-white/20 px-2 py-1 rounded">.shk</code> file and run it using:</p>
+          <pre>python interpreter.py myfile.shk</pre>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <button class="cyber-button">
+          <a id="3" href="https://github.com/anirudh12032008/shrik" target="_blank"></a>
+        </button>
+      </div>
+    </div>
+
+    <script>
+  function typeT(id, text, speed = 100) {
+      const el = document.getElementById(id);
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          el.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+      function showTab(tab) {
+        document.querySelectorAll('.tc').forEach(el => {
+          el.classList.remove('show');
+          el.classList.add('hidden');
+        });
+        const target = document.getElementById(tab);
+        target.classList.remove('hidden');
+        setTimeout(() => target.classList.add('show'), 40);
+      }
+      showTab('intro');
+      typeT("ti", "ShrikLang Docs ", 250);
+      typeT("1", "What is ShrikLang? ", 100);
+      typeT("2", "ShrikLang is a cool programming language designed by ANIRUDH SAHU, built with Python. It has variables, functions, loops, errors, and NO SEMICOLONS!!!!", 20);
+      typeT("3", "Get Started ", 200);
+    </script>
+
+  </body>
+  </html>
