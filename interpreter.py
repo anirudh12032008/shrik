@@ -281,6 +281,75 @@ class Brain:
         raise TypeError(f"can't eval this thing")
 
 
+def runner(code):
+    global funcs
+    funcs = {}
+    mem = {}
+    output = []
+
+    tokens = cut(code)
+    brain = Brain(tokens)
+    plan = brain.go()
+
+    try:
+        for line in plan:
+            if isinstance(line, Say):
+                val = brain.evalexp(line.val, mem)
+                output.append(str(val))
+            elif isinstance(line, Func):
+                funcs[line.name] = line
+            elif isinstance(line, Repeat):
+                while brain.evalexp(line.cond, mem):
+                    for stmt in line.body:
+                        if isinstance(stmt, Say):
+                            output.append(str(brain.evalexp(stmt.val, mem)))
+                        elif isinstance(stmt, Set):
+                            mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        elif isinstance(stmt, Oops):
+                            val = brain.evalexp(stmt.msg, mem)
+                            raise RuntimeError(f"oops! {val}")
+
+            elif isinstance(line, Call):
+                f = funcs.get(line.name)
+                if not f:
+                    raise NameError(f"no craft called {line.name}")
+                new_mem = mem.copy()
+                for i, argname in enumerate(f.args):
+                    new_mem[argname] = brain.evalexp(line.args[i], mem)
+                for stmt in f.body:
+                    if isinstance(stmt, Say):
+                        output.append(str(brain.evalexp(stmt.val, new_mem)))
+                    elif isinstance(stmt, Set):
+                        new_mem[stmt.who] = brain.evalexp(stmt.val, new_mem)
+                    elif isinstance(stmt, Oops):
+                        val = brain.evalexp(stmt.msg, new_mem)
+                        raise RuntimeError(f"oops! {val}")
+
+            elif isinstance(line, Set):
+                mem[line.who] = brain.evalexp(line.val, mem)
+            elif isinstance(line, Oops):
+                val = brain.evalexp(line.msg, mem)
+                raise RuntimeError(f"oops! {val}")
+            elif isinstance(line, If):
+                cond = brain.evalexp(line.cond, mem)
+                branch = line.body if cond else line.other
+                if branch:
+                    for stmt in branch:
+                        if isinstance(stmt, Say):
+                            output.append(str(brain.evalexp(stmt.val, mem)))
+                        elif isinstance(stmt, Set):
+                            mem[stmt.who] = brain.evalexp(stmt.val, mem)
+                        elif isinstance(stmt, Oops):
+                            val = brain.evalexp(stmt.msg, mem)
+                            raise RuntimeError(f"oops! {val}")
+            else:
+                raise TypeError(f"unknown line type {type(line)}")
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+    return "\n".join(output)
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python interpreter.py filename.shk")

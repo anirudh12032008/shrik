@@ -158,8 +158,43 @@
         </button>
       </div>
     </div>
+<div class="glass rounded-2xl p-6 mt-10">
+  <h2 class="text-2xl font-semibold mb-4">Try ShrikLang Online</h2>
+  <textarea id="codebox" placeholder="Write ShrikLang code here..." class="w-full bg-black bg-opacity-50 text-green-300 font-mono p-4 rounded-lg h-48 resize-none border border-cyan-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-300"></textarea>
+  
+  <div class="mt-4 flex items-center space-x-4">
+    <button onclick="runner()" class="cyber-button">▶️ Run</button>
+    <span id="status" class="text-sm text-gray-400"></span>
+  </div>
+
+  <pre id="outbox" class="mt-6 p-4 bg-black bg-opacity-70 text-lime-300 rounded-lg min-h-[100px]">Output will appear here...</pre>
+</div>
 
     <script>
+      async function runner() {
+  const code = document.getElementById("codebox").value;
+  const output = document.getElementById("outbox");
+  const status = document.getElementById("status");
+
+  output.textContent = "";
+  status.textContent = "Running...";
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+
+    const data = await res.json();
+    output.textContent = data.output || "No output";
+    status.textContent = "Done!";
+  } catch (err) {
+    output.textContent = "Error: " + err.message;
+    status.textContent = "Failed";
+  }
+}
+
   function typeT(id, text, speed = 100) {
       const el = document.getElementById(id);
       let i = 0;
