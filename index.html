@@ -180,7 +180,7 @@
   status.textContent = "Running...";
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/run", {
+    const res = await fetch("http://37.27.51.34:5050/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code })
