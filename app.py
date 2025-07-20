@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify, render_template
 from interpreter import runner
 from flask_cors import CORS
@@ -17,3 +18,7 @@ def run():
         return jsonify({"output": output})
     except Exception as e:
         return jsonify({"output": f"[Error: {e}]"})
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
