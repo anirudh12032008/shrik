@@ -1,7 +1,7 @@
+import os
 from flask import Flask, request, jsonify
-from interpreter import runner
 from flask_cors import CORS
-
+from interpreter import runner
 
 app = Flask(__name__)
 CORS(app)
@@ -14,5 +14,6 @@ def run():
     return jsonify({"output": result})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, ssl_context=('certs/cert.pem', 'certs/key.pem'))
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
 
