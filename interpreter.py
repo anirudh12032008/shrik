@@ -95,9 +95,12 @@ class Call(Thing):
         self.args = args
 
 class Brain:
-    def __init__(self, stuff):
+    def __init__(self, stuff, inputs=None):
         self.stuff = stuff
         self.spot = 0
+        self.inputs = inputs or []
+        self.input_index = 0
+
 
     def look(self):
         if self.spot < len(self.stuff):
@@ -257,7 +260,13 @@ class Brain:
         if isinstance(exp, Txt):
             return exp.val
         if isinstance(exp, Inp):
-            return input("Input: ")
+            if self.input_index < len(self.inputs):
+                val = self.inputs[self.input_index]
+                self.input_index += 1
+                return val
+            else:
+                raise RuntimeError("No more input provided.")
+
         if isinstance(exp, Name):
             if exp.val in mem:
                 return mem[exp.val]
@@ -281,15 +290,19 @@ class Brain:
         raise TypeError(f"can't eval this thing")
 
 
-def runner(code):
+def runner(code, inputs=None):
     global funcs
     funcs = {}
     mem = {}
     output = []
 
     tokens = cut(code)
-    brain = Brain(tokens)
+    brain = Brain(tokens, inputs or []) 
     plan = brain.go()
+    if inputs is None:
+        inputs = []
+    input_index = 0
+
 
     try:
         for line in plan:
@@ -326,7 +339,16 @@ def runner(code):
                         raise RuntimeError(f"oops! {val}")
 
             elif isinstance(line, Set):
-                mem[line.who] = brain.evalexp(line.val, mem)
+                val = brain.evalexp(line.val, mem)
+
+                if isinstance(line.val, str) and line.val.strip().lower() == "input":
+                    if input_index < len(inputs):
+                        val = inputs[input_index]
+                        input_index += 1
+                    else:
+                        val = "" 
+
+                mem[line.who] = val
             elif isinstance(line, Oops):
                 val = brain.evalexp(line.msg, mem)
                 raise RuntimeError(f"oops! {val}")

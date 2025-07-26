@@ -1,3 +1,4 @@
+import code
 import os
 from flask import Flask, request, jsonify, render_template
 from interpreter import runner
@@ -13,8 +14,9 @@ def home():
 @app.route("/run", methods=["POST"])
 def run():
     code = request.get_json().get("code", "")
+    inputs = request.get_json().get("inputs", [])
     try:
-        output = runner(code)
+        output = runner(code, inputs)
         return jsonify({"output": output})
     except Exception as e:
         return jsonify({"output": f"[Error: {e}]"})
