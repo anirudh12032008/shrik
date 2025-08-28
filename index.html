@@ -1,0 +1,231 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShrikLang Docs</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        font-family: 'Orbitron', sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: #fff;
+      }
+
+      h1, h2, h3 {
+        font-family: 'Orbitron', sans-serif;
+        text-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+        letter-spacing: 2px;
+      }
+
+      .glass {
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      }
+
+      .cyber-button {
+        background: linear-gradient(90deg, #ff00cc, #3333ff);
+        color: #fff;
+        border-radius: 50px;
+        padding: 12px 24px;
+        box-shadow: 0 0 10px #ff00cc, 0 0 20px #3333ff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .cyber-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #ff00cc, 0 0 40px #3333ff;
+      }
+
+      pre {
+        background-color: rgba(0,0,0,0.7);
+        border: 1px solid rgba(0,255,255,0.2);
+        box-shadow: 0 0 8px rgba(0,255,255,0.4);
+        color: #00ffcc;
+      }
+
+      .tab-button {
+        background-color: rgba(255, 255, 255, 0.08);
+        padding: 10px 20px;
+        border-radius: 30px;
+        border: 1px solid rgba(0,255,255,0.2);
+        box-shadow: 0 0 10px rgba(0,255,255,0.2);
+        transition: all 0.3s ease;
+      }
+
+      .tab-button:hover {
+        background: linear-gradient(90deg, #ff00cc, #00ffe1);
+        box-shadow: 0 0 15px #ff00cc, 0 0 15px #00ffe1;
+        transform: scale(1.05);
+      }
+      .typed::after {
+      content: '|';
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    </style>
+
+  </head>
+  <body class="min-h-screen">
+    <div class="max-w-5xl mx-auto py-12 px-6">
+  <h1 id="ti" class="text-5xl font-bold text-center mb-10 gt"></h1>
+
+
+      <div class="flex justify-center mb-8 space-x-4">
+        <button onclick="st('intro')" class="tab-button">Intro</button>
+        <button onclick="st('syntax')" class="tab-button">Syntax</button>
+        <button onclick="st('usage')" class="tab-button">Usage</button>
+      </div>
+
+      <div id="intro" class="tc fade show">
+        <div class="glass rounded-2xl p-6">
+          <h2 id="1" class="text-2xl font-semibold mb-3"></h2>
+          <p id="2" class="text-lg leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div id="syntax" class="tc fade hidden space-y-8">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Defining variables</h2>
+          <pre>grab x as 5
+  say x</pre>
+        </div>
+
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Print Output</h2>
+          <pre>say "Hello, World!"</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Conditional Logic</h2>
+          <pre>grab x as 10
+  if x > 5 {
+    say "x is big!"
+  } else {
+    say "x is small!"
+  }</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Function Definition</h2>
+          <pre>craft greet(name) {
+    say "Hello " + name
+  }
+
+  greet("Shrik")</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Loops</h2>
+          <pre>grab i as 0
+  repeat(i < 5) {
+    say i
+    grab i as i + 1
+  }</pre>
+        </div>
+
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-4">Raise an Error</h2>
+          <pre>oops "Something went wrong!"</pre>
+        </div>
+      </div>
+
+      <div id="usage" class="tc fade hidden">
+        <div class="glass rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold mb-3">How to Run</h2>
+          <p class="text-lg leading-relaxed">Save your code in a <code class="bg-white/20 px-2 py-1 rounded">.shk</code> file and run it using:</p>
+          <pre>python interpreter.py myfile.shk</pre>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <button class="cyber-button">
+          <a id="3" href="https://github.com/anirudh12032008/shrik" target="_blank"></a>
+        </button>
+      </div>
+    </div>
+<div class="glass rounded-2xl p-6 mt-10">
+  <h2 class="text-2xl font-semibold mb-4">Try ShrikLang Online</h2>
+  <textarea id="codebox" placeholder="Write ShrikLang code here..." class="w-full bg-black bg-opacity-50 text-green-300 font-mono p-4 rounded-lg h-48 resize-none border border-cyan-400 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-300"></textarea>
+  
+  <div class="glass rounded-2xl p-6 mt-6">
+  <h2 class="text-2xl font-semibold mb-3">Inputs (one per line)</h2>
+  <textarea id="inputData" rows="5" class="w-full bg-black bg-opacity-50 text-white p-3 rounded-lg border border-cyan-300" placeholder="e.g. 42\nHello World"></textarea>
+</div>
+
+  <div class="mt-4 flex items-center space-x-4">
+    <button onclick="runner()" class="cyber-button">▶️ Run</button>
+    <span id="status" class="text-sm text-gray-400"></span>
+  </div>
+
+  <pre id="outbox" class="mt-6 p-4 bg-black bg-opacity-70 text-lime-300 rounded-lg min-h-[100px]">Output will appear here...</pre>
+</div>
+
+    <script>
+      async function runner() {
+  const code = document.getElementById("codebox").value;
+  const output = document.getElementById("outbox");
+  const rawInputs = document.getElementById("inputData").value.trim();  // <-- ADD THIS LINE
+
+  const inputs = rawInputs ? rawInputs.split("\n") : [];
+
+  const status = document.getElementById("status");
+
+  output.textContent = "";
+  status.textContent = "Running...";
+
+  try {
+    const res = await fetch("/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, inputs })
+    });
+
+    const data = await res.json();
+    output.textContent = data.output || "No output";
+    status.textContent = "Done!";
+  } catch (err) {
+    output.textContent = "Error: " + err.message;
+    status.textContent = "Failed";
+  }
+}
+
+  function typeT(id, text, speed = 100) {
+      const el = document.getElementById(id);
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          el.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+      function st(tab) {
+        document.querySelectorAll('.tc').forEach(el => {
+          el.classList.remove('show');
+          el.classList.add('hidden');
+        });
+        const target = document.getElementById(tab);
+        target.classList.remove('hidden');
+        setTimeout(() => target.classList.add('show'), 40);
+      }
+      st('intro');
+      typeT("ti", "ShrikLang Docs ", 250);
+      typeT("1", "What is ShrikLang? ", 100);
+      typeT("2", "ShrikLang is a cool programming language designed by ANIRUDH SAHU, built with Python. It has variables, functions, loops, errors, and NO SEMICOLONS!!!!", 20);
+      typeT("3", "Get Started ", 200);
+    </script>
+
+  </body>
+  </html>
