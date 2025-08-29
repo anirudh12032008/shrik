@@ -1,6 +1,6 @@
 # Shrink : Esolang
 
-Hiiii! this is Shrinklang!
+Hiiii! this is Shriklang!
 ShrikLang is a cool programming language designed by ANIRUDH SAHU, built with Python. It has variables, functions, loops, errors, and NO SEMICOLONS!!!!
 
 ## Features
